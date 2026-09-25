@@ -1,5 +1,4 @@
-const API_BASE_URL = "https://ai-ui-generator-qux4.onrender.com";
-/**
+const API_BASE_URL = "https://ai-ui-generator-qux4.onrender.com";/**
  * Shared fetch wrapper. Throws an Error with a readable, user-facing
  * message on any failure (network error, non-2xx response, bad JSON).
  */
