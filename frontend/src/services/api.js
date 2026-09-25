@@ -1,69 +1,115 @@
-const API_BASE_URL = "https://ai-ui-generator-qux4.onrender.com";/**
- * Shared fetch wrapper. Throws an Error with a readable, user-facing
- * message on any failure (network error, non-2xx response, bad JSON).
- */
-async function apiRequest(path, body) {
-  let response;
+const API_BASE_URL = "https://ai-ui-generator-qux4.onrender.com";
 
-  try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-  } catch (networkErr) {
-    throw new Error(
-  "Unable to reach the backend server. Please try again."
-);
-
-  }
-
-  let data;
-  try {
-    data = await response.json();
-  } catch (parseErr) {
-    throw new Error("The server returned an unexpected response.");
-  }
+async function handleResponse(response) {
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data?.error || "Something went wrong. Please try again.");
+    throw new Error(
+      data.message ||
+        data.error ||
+        `Server error: ${response.status} ${response.statusText}`
+    );
   }
 
   return data;
 }
 
-/**
- * Generate a brand new website from a text prompt.
- * @param {string} prompt
- * @returns {Promise<{html: string, css: string, javascript: string}>}
- */
-export function generateWebsite(prompt) {
-  return apiRequest("/api/generate", { prompt });
+// Generate UI from a prompt
+export async function generateUI(prompt) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    return await handleResponse(response);
+  } catch (networkErr) {
+    if (networkErr instanceof TypeError) {
+      throw new Error(
+        "Unable to reach the backend server. Please try again."
+      );
+    }
+
+    throw networkErr;
+  }
 }
 
-/**
- * Edit the current website with a natural-language instruction.
- * @param {{instruction: string, html: string, css: string, javascript: string}} data
- * @returns {Promise<{html: string, css: string, javascript: string}>}
- */
-export function editWebsite(data) {
-  return apiRequest("/api/edit", data);
+// Edit existing UI
+export async function editUI(code, instruction) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/edit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        code,
+        instruction,
+      }),
+    });
+
+    return await handleResponse(response);
+  } catch (networkErr) {
+    if (networkErr instanceof TypeError) {
+      throw new Error(
+        "Unable to reach the backend server. Please try again."
+      );
+    }
+
+    throw networkErr;
+  }
 }
 
-/**
- * Run an AI code review over the current website code.
- * @param {{html: string, css: string, javascript: string}} data
- * @returns {Promise<{status: "clean"|"issues", issues: Array}>}
- */
-export function reviewWebsite(data) {
-  return apiRequest("/api/review", data);
+// Review UI/code
+export async function reviewUI(code) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/review`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code }),
+    });
+
+    return await handleResponse(response);
+  } catch (networkErr) {
+    if (networkErr instanceof TypeError) {
+      throw new Error(
+        "Unable to reach the backend server. Please try again."
+      );
+    }
+
+    throw networkErr;
+  }
 }
 
-/**
- * Ask the AI to fix a specific set of review issues.
- * @param {{html: string, css: string, javascript: string, issues: Array}} data
- * @returns {Promise<{html: string, css: string, javascript: string}>}
- */
-export function fixWebsite(data) {
-  return apiRequest("/api/fix", data);
+// Fix UI/code
+export async function fixUI(code, issue) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/fix`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        code,
+        issue,
+      }),
+    });
+
+    return await handleResponse(response);
+  } catch (networkErr) {
+    if (networkErr instanceof TypeError) {
+      throw new Error(
+        "Unable to reach the backend server. Please try again."
+      );
+    }
+
+    throw networkErr;
+  }
 }
+
+export { API_BASE_URL };
