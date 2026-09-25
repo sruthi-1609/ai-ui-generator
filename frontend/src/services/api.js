@@ -13,8 +13,9 @@ async function apiRequest(path, body) {
     });
   } catch (networkErr) {
     throw new Error(
-      "Unable to reach the backend server. Make sure it is running on http://localhost:5000."
-    );
+  "Unable to reach the backend server. Please try again."
+);
+
   }
 
   let data;
