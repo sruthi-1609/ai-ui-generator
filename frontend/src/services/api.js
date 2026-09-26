@@ -14,8 +14,8 @@ async function handleResponse(response) {
   return data;
 }
 
-// Generate UI from a prompt
-export async function generateUI(prompt) {
+// Generate website
+export async function generateWebsite(prompt) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/generate`, {
       method: "POST",
@@ -26,45 +26,42 @@ export async function generateUI(prompt) {
     });
 
     return await handleResponse(response);
-  } catch (networkErr) {
-    if (networkErr instanceof TypeError) {
+  } catch (error) {
+    if (error instanceof TypeError) {
       throw new Error(
         "Unable to reach the backend server. Please try again."
       );
     }
 
-    throw networkErr;
+    throw error;
   }
 }
 
-// Edit existing UI
-export async function editUI(code, instruction) {
+// Edit website
+export async function editWebsite(data) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/edit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        code,
-        instruction,
-      }),
+      body: JSON.stringify(data),
     });
 
     return await handleResponse(response);
-  } catch (networkErr) {
-    if (networkErr instanceof TypeError) {
+  } catch (error) {
+    if (error instanceof TypeError) {
       throw new Error(
         "Unable to reach the backend server. Please try again."
       );
     }
 
-    throw networkErr;
+    throw error;
   }
 }
 
-// Review UI/code
-export async function reviewUI(code) {
+// Review website
+export async function reviewWebsite(code) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/review`, {
       method: "POST",
@@ -75,19 +72,19 @@ export async function reviewUI(code) {
     });
 
     return await handleResponse(response);
-  } catch (networkErr) {
-    if (networkErr instanceof TypeError) {
+  } catch (error) {
+    if (error instanceof TypeError) {
       throw new Error(
         "Unable to reach the backend server. Please try again."
       );
     }
 
-    throw networkErr;
+    throw error;
   }
 }
 
-// Fix UI/code
-export async function fixUI(code, issue) {
+// Fix website
+export async function fixWebsite(code, issue) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/fix`, {
       method: "POST",
@@ -101,14 +98,14 @@ export async function fixUI(code, issue) {
     });
 
     return await handleResponse(response);
-  } catch (networkErr) {
-    if (networkErr instanceof TypeError) {
+  } catch (error) {
+    if (error instanceof TypeError) {
       throw new Error(
         "Unable to reach the backend server. Please try again."
       );
     }
 
-    throw networkErr;
+    throw error;
   }
 }
 
