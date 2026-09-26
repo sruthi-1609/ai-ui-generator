@@ -1,112 +1,45 @@
-const API_BASE_URL = "https://ai-ui-generator-qux4.onrender.com";
+const API_BASE_URL = "";
 
-async function handleResponse(response) {
-  const data = await response.json().catch(() => ({}));
+async function apiRequest(path, body) {
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    throw new Error(
+      "Unable to reach the backend server. Please try again."
+    );
+  }
+
+  const data = await response.json();
 
   if (!response.ok) {
     throw new Error(
-      data.message ||
-        data.error ||
-        `Server error: ${response.status} ${response.statusText}`
+      data?.error || "Something went wrong. Please try again."
     );
   }
 
   return data;
 }
 
-// Generate website
-export async function generateWebsite(prompt) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/generate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt }),
-    });
-
-    return await handleResponse(response);
-  } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error(
-        "Unable to reach the backend server. Please try again."
-      );
-    }
-
-    throw error;
-  }
+export function generateWebsite(prompt) {
+  return apiRequest("/api/generate", { prompt });
 }
 
-// Edit website
-export async function editWebsite(data) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/edit`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    return await handleResponse(response);
-  } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error(
-        "Unable to reach the backend server. Please try again."
-      );
-    }
-
-    throw error;
-  }
+export function editWebsite(data) {
+  return apiRequest("/api/edit", data);
 }
 
-// Review website
-export async function reviewWebsite(code) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/review`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code }),
-    });
-
-    return await handleResponse(response);
-  } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error(
-        "Unable to reach the backend server. Please try again."
-      );
-    }
-
-    throw error;
-  }
+export function reviewWebsite(data) {
+  return apiRequest("/api/review", data);
 }
 
-// Fix website
-export async function fixWebsite(code, issue) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/fix`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        code,
-        issue,
-      }),
-    });
-
-    return await handleResponse(response);
-  } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error(
-        "Unable to reach the backend server. Please try again."
-      );
-    }
-
-    throw error;
-  }
+export function fixWebsite(data) {
+  return apiRequest("/api/fix", data);
 }
-
-export { API_BASE_URL };
