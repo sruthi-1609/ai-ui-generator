@@ -17,7 +17,13 @@ async function apiRequest(path, body) {
     );
   }
 
-  const data = await response.json();
+  let data;
+
+  try {
+    data = await response.json();
+  } catch (error) {
+    throw new Error("The server returned an invalid response.");
+  }
 
   if (!response.ok) {
     throw new Error(
@@ -28,18 +34,44 @@ async function apiRequest(path, body) {
   return data;
 }
 
-export function generateWebsite(prompt) {
-  return apiRequest("/api/generate", { prompt });
+export async function generateWebsite(prompt) {
+  const data = await apiRequest("/api/generate", {
+    prompt,
+  });
+
+  try {
+    return JSON.parse(data.result);
+  } catch (error) {
+    throw new Error("The AI returned an invalid website format.");
+  }
 }
 
-export function editWebsite(data) {
-  return apiRequest("/api/edit", data);
+export async function editWebsite(data) {
+  const result = await apiRequest("/api/edit", data);
+
+  try {
+    return JSON.parse(result.result);
+  } catch (error) {
+    throw new Error("The AI returned an invalid edited website format.");
+  }
 }
 
-export function reviewWebsite(data) {
-  return apiRequest("/api/review", data);
+export async function reviewWebsite(data) {
+  const result = await apiRequest("/api/review", data);
+
+  try {
+    return JSON.parse(result.result);
+  } catch (error) {
+    throw new Error("The AI returned an invalid review format.");
+  }
 }
 
-export function fixWebsite(data) {
-  return apiRequest("/api/fix", data);
+export async function fixWebsite(data) {
+  const result = await apiRequest("/api/fix", data);
+
+  try {
+    return JSON.parse(result.result);
+  } catch (error) {
+    throw new Error("The AI returned an invalid fixed website format.");
+  }
 }
