@@ -11,11 +11,12 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
   "https://sruthi-ai-afg24s0hj-sruthi20.vercel.app",
+  "https://sruthi-ai-fsh3r3eu4-sruthi20.vercel.app",
+  "https://sruthi-ai-ui-git-main-sruthi20.vercel.app",
 ];
 
 app.use(
